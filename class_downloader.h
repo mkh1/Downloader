@@ -4,7 +4,8 @@
 #include <QObject>
 #include <QUrl>
 #include <QString>
-#include <QNetworkAccessManager>
+//#include <QtNetwork/QNetworkAccessManager>
+//#include <QNetworkAccessManager>
 #include <QFile>
 
 class Class_downloader : public QObject
@@ -12,6 +13,7 @@ class Class_downloader : public QObject
     Q_OBJECT
 public:
     //constructors
+    Class_downloader(QObject *parent = 0);
     Class_downloader(QUrl url);
     Class_downloader(QString url);
     
@@ -28,11 +30,11 @@ public slots:
     
     
 private:
-    QNetworkAccessManager manager;
+//    QNetworkAccessManager manager;
     QUrl url;
     double speed;
-    QNetworkReply *currentDownload;
-    QTime downloadTime;
+//    QNetworkReply *currentDownload;
+//    QTime downloadTime;
     QFile output;
 
     void Set_Name_Save_File_default();
