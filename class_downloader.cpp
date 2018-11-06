@@ -35,21 +35,57 @@ void Class_downloader::Start_Download()
 
 void Class_downloader::Set_Name_Save_File_default()
 {
-//    QString path = this->url.path();
-//    QString basename = QFileInfo(path).fileName();
-//    if(basename.isEmpty()){
-
-//    }
-    output.setFileName("hi.txt");
-    if (!output.open(QIODevice::WriteOnly)) {
-        fprintf(stderr, "Problem opening save file '%s' for download '%s': %s\n",
-                qPrintable("hi.txt"), url.toEncoded().constData(),
-                qPrintable(output.errorString()));
-
-        return;                 // skip this download
+    QString path = this->url.path();
+    QString basename = QFileInfo(path).fileName();
+    basename="mymusic.i";
+    if(basename.isEmpty()){
+        basename="Sample";
+        int i=0;
+        if (QFile::exists(basename+".html")) {
+            while (QFile::exists(basename+"("+QString::number(i)+")"+".html")) {
+                i++;
+            }
+            basename = basename+"("+QString::number(i)+")"+".html";
+        }
+        else if (QFile::exists(basename)) {
+            while (QFile::exists(basename+"("+QString::number(i)+")")) {
+                i++;
+            }
+            basename = basename+"("+QString::number(i)+")";
+        }
     }
-    output.write("abc");
-    output.close();
+    else{
+        QString extention;
+        int i=basename.indexOf(".");
+        int j=basename.length();
+        extention=basename.right(j-i-1);
+        basename=basename.left(i);
+        if (extention.isEmpty() || extention==basename) {
+
+            qDebug() << basename<<"  "<<extention;
+        }
+        else {
+
+        }
+
+
+    }
+
+
+
+
+
+
+//    output.setFileName("hi.txt");
+//    if (!output.open(QIODevice::WriteOnly)) {
+//        fprintf(stderr, "Problem opening save file '%s' for download '%s': %s\n",
+//                qPrintable("hi.txt"), url.toEncoded().constData(),
+//                qPrintable(output.errorString()));
+
+//        return;                 // skip this download
+//    }
+//    output.write("abc");
+//    output.close();
 
 }
 
