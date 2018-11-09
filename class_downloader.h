@@ -20,8 +20,8 @@ public:
     void Set_Url(QString url);
     void Start_Download();
     void Set_Speed(double speed);
-    void Set_Name_Save_File(QString name);
-    void Set_Dir_Save_File(QString name);
+    void Set_Name_File(QString name);
+    void Set_Path_File(QString path);
 
 signals:
 
@@ -35,8 +35,13 @@ private:
     QNetworkReply *currentDownload;
     QTime downloadTime;
     QFile output;
+    QString path;
+    QString file_name;
+    QString file_path;
 
-    void Set_Name_Save_File_default();
+    void Init();
+    void Set_Output_default();
+    void Set_Output(QString path , QString name);
 };
 
 #endif // CLASS_DOWNLOADER_H
