@@ -162,7 +162,7 @@ void Class_downloader::Set_Output(QString path, QString name)
     QNetworkRequest request(url);
 
     currentDownload = manager.get(request);
-    currentDownload->setReadBufferSize(this->set_speed);
+    currentDownload->setReadBufferSize(1);
     connect(currentDownload, SIGNAL(downloadProgress(qint64,qint64)),
             SLOT(downloadProgress(qint64,qint64)));
     connect(currentDownload, SIGNAL(finished()),
