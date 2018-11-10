@@ -20,28 +20,40 @@ public:
     void Set_Url(QString url);
     void Start_Download();
     void Set_Speed(double speed);
-    void Set_Name_File(QString name);
-    void Set_Path_File(QString path);
+    void Set_Output(QString path , QString name);
+
+    //getters
+    QString Get_Name_File();
+    QString Get_Path_File();
+
+    qint64 getSpeed() const;
+    void setSpeed(const qint64 &value);
 
 signals:
+    void finished();
 
 public slots:
+    void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
+    void downloadFinished();
+    void downloadReadyRead();
     
     
 private:
     QNetworkAccessManager manager;
     QUrl url;
-    double speed;
+    qint64 set_speed;
     QNetworkReply *currentDownload;
     QTime downloadTime;
     QFile output;
     QString path;
     QString file_name;
     QString file_path;
+    QString Error;
+    QString speed;
 
     void Init();
     void Set_Output_default();
-    void Set_Output(QString path , QString name);
+
 };
 
 #endif // CLASS_DOWNLOADER_H

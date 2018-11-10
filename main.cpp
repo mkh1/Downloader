@@ -6,9 +6,9 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    Class_downloader a1;
+    Class_downloader a1("http://www.africau.edu/images/default/sample.pdf");
 
-    a1.Start_Download();
+
 
     return a.exec();
 }
