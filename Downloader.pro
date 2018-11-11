@@ -1,4 +1,5 @@
 QT -= gui
+CONFIG += console
 
 QT += network
 

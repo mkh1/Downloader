@@ -3,6 +3,8 @@
 #include <QFileInfo>
 #include <QString>
 #include <QNetworkReply>
+#include <stdio.h>
+#include <stdlib.h>
 
 
 Class_downloader::Class_downloader(QObject *parent)
@@ -55,12 +57,14 @@ void Class_downloader::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
         speed /= 1024*1024;
         unit = "MB/s";
     }
+    qDebug() << QString::number(speed)<<" "<<unit<<"  _"<<QString::number(bytesReceived)<<"  _"<<QString::number(bytesTotal);
     this->speed=QString::number(speed)+unit;
 }
 
 void Class_downloader::downloadFinished()
 {
-    output.close();
+
+
 
     if (currentDownload->error()) {
         // download failed
@@ -68,21 +72,23 @@ void Class_downloader::downloadFinished()
     } else {
         printf("Succeeded.\n");
     }
-//    emit finished();
+
+    emit finished();
+//    this->error=true;
+//    qDebug() << error ;
 }
 
 void Class_downloader::downloadReadyRead()
 {
+//    output.open(QIODevice::WriteOnly);
     this->output.write(currentDownload->readAll());
 }
 
 void Class_downloader::Init()
 {
-    qDebug() << "gg";
-//    setSpeed(600);
-    qDebug() << "gg";
+    this->error=false;
+    qDebug() << error ;
     Set_Output_default();
-
 }
 
 
@@ -97,9 +103,9 @@ void Class_downloader::Set_Output_default()
 
 void Class_downloader::Set_Output(QString path, QString name)
 {
-    qDebug() << "gg";
+//    qDebug() << extention<<"   "<< m;
     if(name.isEmpty()){
-        qDebug() << "gg";
+
         name="Sample";
         int i=1;
         if (this->output.exists(path+name+".html")) {
@@ -114,12 +120,13 @@ void Class_downloader::Set_Output(QString path, QString name)
     }
     else{
         QString extention;
-        int i=name.indexOf(".");
-        int j=name.length();
-        extention=name.right(j-i-1);
-        name=name.left(i);
-        if (extention.isEmpty() || extention==name) {
-            int i=1;
+        int m=name.indexOf(".");
+        int n=name.length();
+        extention=name.right(n-m-1);
+        name=name.left(m);
+        int i=1;
+        qDebug() <<extention;
+        if (extention.isEmpty() || m==-1) {
             if (this->output.exists(path+name+".html")) {
                 while (this->output.exists(path+name+"("+QString::number(i)+")"+".html")) {
                     i++;
@@ -159,20 +166,28 @@ void Class_downloader::Set_Output(QString path, QString name)
         return;                 // skip this download
     }
 
+//    output.remove();
+//    output.close();
     QNetworkRequest request(url);
 
     currentDownload = manager.get(request);
-    currentDownload->setReadBufferSize(1);
+    currentDownload->setReadBufferSize(20000);
     connect(currentDownload, SIGNAL(downloadProgress(qint64,qint64)),
             SLOT(downloadProgress(qint64,qint64)));
     connect(currentDownload, SIGNAL(finished()),
             SLOT(downloadFinished()));
-    connect(currentDownload, SIGNAL(readyRead()),
+    connect(currentDownload, SIGNAL(finished()),
             SLOT(downloadReadyRead()));
+//    connect(currentDownload, SIGNAL(readyRead()),
+//            SLOT(downloadReadyRead()));
 
     // prepare the output
     printf("Downloading %s...\n", url.toEncoded().constData());
     downloadTime.start();
+
+
+//system("PAUSE");
+
 
 //        output.write("abc");
 //        output.close();
@@ -193,6 +208,16 @@ void Class_downloader::Set_Output(QString path, QString name)
 //    output.close();
 }
 
+
+//Class_downloader::~Class_downloader(){
+//    qDebug( "C Style Dfffffffffffffffffffffaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaffffffffffffffffffffffffffffebug Message" );
+//    if(!this->error){
+//        output.remove();
+//        qDebug() << error ;
+
+//    }
+//        output.close();
+//}
 
 
 
