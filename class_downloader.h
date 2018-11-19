@@ -13,7 +13,6 @@ class Class_downloader : public QObject
 public:
     //constructors
     Class_downloader(QObject *parent = 0);
-//    ~Class_downloader();
     Class_downloader(QUrl url);
     Class_downloader(QString url);
     

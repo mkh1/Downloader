@@ -46,6 +46,10 @@ void Class_downloader::setSpeed(const qint64 &value)
 
 void Class_downloader::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
+    if (currentDownload->error()) {
+        // download failed
+        fprintf(stderr, "Failed: %s\n", qPrintable(currentDownload->errorString()));
+    }
     double speed = bytesReceived * 1000.0 / downloadTime.elapsed();
     QString unit;
     if (speed < 1024) {
@@ -80,14 +84,14 @@ void Class_downloader::downloadFinished()
 
 void Class_downloader::downloadReadyRead()
 {
-//    output.open(QIODevice::WriteOnly);
+    output.open(QIODevice::WriteOnly);
     this->output.write(currentDownload->readAll());
 }
 
 void Class_downloader::Init()
 {
-    this->error=false;
-    qDebug() << error ;
+//    this->error=false;
+//    qDebug() << error ;
     Set_Output_default();
 }
 
@@ -137,7 +141,7 @@ void Class_downloader::Set_Output(QString path, QString name)
                 name = path+name+".html";
             }
         }
-        else {
+        else { 
             if (this->output.exists(path+name+"."+extention)) {
                 while (this->output.exists(path+name+"("+QString::number(i)+")"+"."+extention)) {
                     i++;
@@ -166,12 +170,12 @@ void Class_downloader::Set_Output(QString path, QString name)
         return;                 // skip this download
     }
 
-//    output.remove();
-//    output.close();
+    output.remove();
+    output.close();
     QNetworkRequest request(url);
 
     currentDownload = manager.get(request);
-    currentDownload->setReadBufferSize(20000);
+    currentDownload->setReadBufferSize(100);
     connect(currentDownload, SIGNAL(downloadProgress(qint64,qint64)),
             SLOT(downloadProgress(qint64,qint64)));
     connect(currentDownload, SIGNAL(finished()),
@@ -209,15 +213,6 @@ void Class_downloader::Set_Output(QString path, QString name)
 }
 
 
-//Class_downloader::~Class_downloader(){
-//    qDebug( "C Style Dfffffffffffffffffffffaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaffffffffffffffffffffffffffffebug Message" );
-//    if(!this->error){
-//        output.remove();
-//        qDebug() << error ;
-
-//    }
-//        output.close();
-//}
 
 
 
